@@ -10,7 +10,6 @@
     </parent>
     <groupId>com.myproject</groupId>
     <artifactId>simple-todo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>simple-todo</name>
     <description>TODO REST APIs</description>
     <properties>
