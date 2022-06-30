@@ -1,6 +1,6 @@
 # simple-todo
 TODO Backend Project 
 --------------------
-Spring Boot
+The Todo-Backend project defines a simple web API spec - for managing a todo list
 
-Goto http://localhost:8080/swagger-ui.html#! to try out APIs
+Start the application and Goto http://localhost:8080/swagger-ui.html#! to try out the APIs
