@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TodoServiceTest {
 
-  private List<Todo> todoList = new ArrayList<>();
+  private final List<Todo> todoList = new ArrayList<>();
 
   @InjectMocks
   TodoService mockService;
@@ -74,5 +75,19 @@ class TodoServiceTest {
     Optional<Todo> todo = mockService.getTodo(1);
     assertTrue(todo.isPresent());
     assertEquals("my todo 1", todo.get().getTitle());
+  }
+
+  @Test
+  void remove() {
+    when(mocTodoRepository.getTodo(anyInt())).thenReturn(Optional.ofNullable(todoList.get(0)));
+    doReturn(true).when(mocTodoRepository).remove(any());
+    assertTrue(mockService.remove(1));
+  }
+
+  @Test
+  void setCompleted() {
+    when(mocTodoRepository.getTodo(anyInt())).thenReturn(Optional.ofNullable(todoList.get(0)));
+    doReturn(true).when(mocTodoRepository).setCompleted(any());
+    assertTrue(mockService.setCompleted(1));
   }
 }
