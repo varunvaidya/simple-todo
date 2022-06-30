@@ -35,16 +35,17 @@ public class TodoRepository {
     return this.todosMap.values().stream().filter(todo1 -> todo1.getId() == todo.getId()).findFirst();
   }
 
-  public void remove(Todo todo) {
-    this.todosMap.remove(todo.getId(), todo);
+  public Boolean remove(Todo todo) {
+    return this.todosMap.remove(todo.getId(), todo);
   }
 
   public Optional<Todo> getTodo(int todoId) {
     return Optional.ofNullable(this.todosMap.getOrDefault(todoId, null));
   }
 
-  public void setCompleted(Todo todo) {
+  public Boolean setCompleted(Todo todo) {
     todo.setCompleted(true);
-    todosMap.put(todo.getId(), todo);
+    Todo todo1 = todosMap.put(todo.getId(), todo);
+    return todo1 != null;
   }
 }
