@@ -31,12 +31,20 @@ public class TodoService {
     return todoRepository.getTodo(id);
   }
 
-  public void remove(Todo todo) {
-    todoRepository.remove(todo);
+  public boolean remove(int todoId) {
+    Optional<Todo> todo = getTodo(todoId);
+    if (todo.isPresent()) {
+      return todoRepository.remove(todo.get());
+    }
+    return false;
   }
 
-  public void setCompleted(Todo todo) {
-    todoRepository.setCompleted(todo);
+  public boolean setCompleted(int todoId) {
+    Optional<Todo> todo = getTodo(todoId);
+    if (todo.isPresent()) {
+      return todoRepository.setCompleted(todo.get());
+    }
+    return false;
   }
 
   private Boolean checkFlag(Boolean flag) {
