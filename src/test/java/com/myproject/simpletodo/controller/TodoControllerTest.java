@@ -1,5 +1,7 @@
 package com.myproject.simpletodo.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myproject.simpletodo.model.Todo;
 import com.myproject.simpletodo.service.TodoService;
 import org.hamcrest.Matchers;
@@ -17,7 +19,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static sun.plugin2.util.PojoUtil.toJson;
+
 
 @WebMvcTest(TodoController.class)
 class TodoControllerTest {
@@ -80,9 +82,7 @@ class TodoControllerTest {
 
   @Test
   void deleteTodo() throws Exception {
-    Todo todo1 = new Todo(1, "my todo 1", false);
-    when(mockTodoService.getTodo(anyInt())).thenReturn(java.util.Optional.of(todo1));
-    doNothing().when(mockTodoService).remove(any());
+    doReturn(true).when(mockTodoService).remove(anyInt());
     mockMvc.perform(delete("/todo/1/remove"))
         .andExpect(status().isOk())
         .andExpect(content().string(Matchers.is("Todo deleted successfully")));
@@ -90,8 +90,7 @@ class TodoControllerTest {
 
   @Test
   void deleteTodoNotFound() throws Exception {
-    when(mockTodoService.getTodo(anyInt())).thenReturn(java.util.Optional.empty());
-    doNothing().when(mockTodoService).remove(any());
+    doReturn(false).when(mockTodoService).remove(anyInt());
     mockMvc.perform(delete("/todo/1/remove"))
         .andExpect(status().isNotFound())
         .andExpect(content().string(Matchers.is("Todo not found!")));
@@ -99,11 +98,14 @@ class TodoControllerTest {
 
   @Test
   void setCompleted() throws Exception {
-    Todo todo1 = new Todo(1, "my todo 1", true);
-    when(mockTodoService.getTodo(anyInt())).thenReturn(java.util.Optional.of(todo1));
-    doNothing().when(mockTodoService).remove(any());
+    doReturn(true).when(mockTodoService).setCompleted(anyInt());
     mockMvc.perform(patch("/todo/1/done"))
         .andExpect(status().isOk())
         .andExpect(content().string(Matchers.is("Todo marked as complete")));
+  }
+
+  private String toJson(Object obj) throws JsonProcessingException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    return objectMapper.writeValueAsString(obj);
   }
 }
