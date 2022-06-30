@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
@@ -41,9 +40,8 @@ public class TodoController {
 
   @DeleteMapping(value = "/{id}/remove")
   public ResponseEntity<String> deleteTodo(@PathVariable int id) {
-    Optional<Todo> todo = todoService.getTodo(id);
-    if(todo.isPresent()) {
-      todoService.remove(todo.get());
+    boolean removed = todoService.remove(id);
+    if(removed) {
       return ResponseEntity.status(HttpStatus.OK).body("Todo deleted successfully");
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found!");
@@ -52,13 +50,11 @@ public class TodoController {
 
   @PatchMapping(value = "/{id}/done")
   public ResponseEntity<String> setCompleted(@PathVariable int id) {
-    Optional<Todo> todo = todoService.getTodo(id);
-    if(todo.isPresent()) {
-      todoService.setCompleted(todo.get());
+    boolean completed = todoService.setCompleted(id);
+    if(completed) {
       return ResponseEntity.status(HttpStatus.OK).body("Todo marked as complete");
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo not found!");
     }
   }
-
 }
